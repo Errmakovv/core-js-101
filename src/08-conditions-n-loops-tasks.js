@@ -51,7 +51,7 @@ function getFactorial(n) {
   let res = 1;
   while (i <= n) {
     res *= i;
-    i++;
+    i += 1;
   }
   return res;
 }
@@ -74,7 +74,7 @@ function getSumBetweenNumbers(n1, n2) {
   let res = 0;
   while (i <= n2) {
     res += i;
-    i++;
+    i += 1;
   }
   return res;
 }
@@ -167,7 +167,9 @@ function doRectanglesOverlap(rect1, rect2) {
  *
  */
 function isInsideCircle(circle, point) {
-  if (((point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2) < circle.radius ** 2) return true;
+  const x = point.x - circle.center.x;
+  const y = point.y - circle.center.y;
+  if ((x ** 2 + y ** 2) < circle.radius ** 2) return true;
   return false;
 }
 
@@ -184,7 +186,7 @@ function isInsideCircle(circle, point) {
  *   'entente' => null
  */
 function findFirstSingleChar(str) {
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) return str[i];
   }
   return null;
@@ -339,7 +341,7 @@ function isBracketsBalanced(str) {
   const open = ['[', '{', '(', '<'];
   const close = [']', '}', ')', '>'];
 
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     if (close.indexOf(str[i]) !== -1) {
       if (stack.length === 0 || stack.pop() !== open[close.indexOf(str[i])]) {
         return false;
@@ -392,8 +394,9 @@ function toNaryString(num, n) {
  */
 function getCommonDirectoryPath(pathes) {
   let str = '';
-  for (let i = 0; i < pathes[0].length; i++) {
-    if (pathes.map((el) => el.indexOf(str + pathes[0][i]) === 0).indexOf(false) !== -1) return str.slice(0, str.lastIndexOf('/') + 1);
+  for (let i = 0; i < pathes[0].length; i += 1) {
+    const temp = str;
+    if (pathes.map((el) => el.indexOf(temp + pathes[0][i]) === 0).indexOf(false) !== -1) return str.slice(0, str.lastIndexOf('/') + 1);
     str += pathes[0][i];
   }
   return str;
@@ -420,9 +423,9 @@ function getCommonDirectoryPath(pathes) {
  */
 function getMatrixProduct(m1, m2) {
   const mat = [];
-  for (let i = 0; i < m1.length; i++) mat[i] = [];
+  for (let i = 0; i < m1.length; i += 1) mat[i] = [];
 
-  for (let k = 0; k < m2[0].length; k++) {
+  for (let k = 0; k < m2[0].length; k += 1) {
     m1.forEach((el, idx) => {
       let t = 0;
       m2.forEach((el2, idx2) => {
@@ -465,12 +468,20 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(position) {
-  if (position[0][0] === position[1][1] && position[0][0] === position[2][2] && position[0][0] !== undefined) return position[0][0];
-  if (position[2][0] === position[1][1] && position[2][0] === position[0][2] && position[2][0] !== undefined) return position[2][0];
-  for (let i = 0; i < 3; i++) {
-    if (position[i][0] === position[i][1] && position[i][0] === position[i][2] && position[i][0] !== undefined) return position[i][0];
-    if (position[0][i] === position[1][i] && position[0][i] === position[2][i] && position[0][i] !== undefined) return position[0][i];
+function evaluateTicTacToePosition(pos) {
+  if (pos[0][0] === pos[1][1] && pos[0][0] === pos[2][2] && pos[0][0] !== undefined) {
+    return pos[0][0];
+  }
+  if (pos[2][0] === pos[1][1] && pos[2][0] === pos[0][2] && pos[2][0] !== undefined) {
+    return pos[2][0];
+  }
+  for (let i = 0; i < 3; i += 1) {
+    if (pos[i][0] === pos[i][1] && pos[i][0] === pos[i][2] && pos[i][0] !== undefined) {
+      return pos[i][0];
+    }
+    if (pos[0][i] === pos[1][i] && pos[0][i] === pos[2][i] && pos[0][i] !== undefined) {
+      return pos[0][i];
+    }
   }
   return undefined;
 }

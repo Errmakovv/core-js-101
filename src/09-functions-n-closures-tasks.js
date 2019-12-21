@@ -119,7 +119,7 @@ function retry(func, attempts) {
         const k = func();
         return k;
       } catch (e) {
-        att--;
+        att -= 1;
       }
     }
     return null;
@@ -199,9 +199,10 @@ function partialUsingArguments(fn, ...args1) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-  let kb = startFrom;
+  let kb = startFrom - 1;
   return function l() {
-    return kb++;
+    kb += 1;
+    return kb;
   };
 }
 

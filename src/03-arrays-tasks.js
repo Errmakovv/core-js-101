@@ -202,7 +202,7 @@ function getTail(arr, n) {
  *    +'30,31,32,33,34'
  */
 function toCsvText(arr) {
-  return arr.reduce((accumulator, currentValue) => accumulator + String(currentValue) + '\n', '').trimRight();
+  return arr.reduce((accumulator, currentValue) => `${accumulator}${String(currentValue)}\n`, '').trimRight();
 }
 
 /**
@@ -540,7 +540,8 @@ function group(array, keySelector, valueSelector) {
   const k = new Map();
 
   array.map((el) => {
-    k.set(keySelector(el), (k.has(keySelector(el)) ? k.get(keySelector(el)).concat(valueSelector(el)) : [valueSelector(el)]));
+    k.set(keySelector(el), (k.has(keySelector(el))
+      ? k.get(keySelector(el)).concat(valueSelector(el)) : [valueSelector(el)]));
     return null;
   });
 

@@ -97,21 +97,23 @@ function getFastestPromise(array) {
  *
  */
 function chainPromises(array, action) {
-  async function l() {
-    const result = [];
-    for (let i = 0; i < array.length; i++) {
-      try {
-        const res = await array[i];
-        result.push(res);
-      } catch (err) {
-        i += 0;
-      }
+  const result = [];
+  const err = [];
+  async function l(index) {
+    if (index === array.length) return result;
+    try {
+      const res = await array[index];
+      result.push(res);
+    } catch (e) {
+      err.push(e);
     }
+
+    await l(index + 1);
     return result;
   }
 
   return new Promise((resolve) => {
-    l().then((resArr) => resolve(resArr.reduce(action)));
+    l(0).then((resArr) => resolve(resArr.reduce(action)));
   });
 }
 
