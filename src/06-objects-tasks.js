@@ -20,8 +20,10 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = () => this.width * this.height;
 }
 
 
@@ -35,8 +37,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -51,8 +53,10 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const obj = JSON.parse(json);
+  const values = Object.values(obj);
+  return new proto.constructor(...values);
 }
 
 
@@ -111,32 +115,80 @@ function fromJSON(/* proto, json */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  cssSelector: '',
+  el: 0,
+  idi: 0,
+  pe: 0,
+  array: [false, false, false, false, false, false],
+
+  element(value) {
+    if (this.el === 1) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    if (this.array.indexOf(true) > 0) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    const copy = { ...this };
+    copy.el = 1;
+    copy.array = this.array.slice();
+    copy.array[0] = true;
+    copy.cssSelector += value;
+    return copy;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    if (this.idi === 1) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    if (this.array.indexOf(true) > 1) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    const copy = { ...this };
+    copy.idi = 1;
+    copy.array = this.array.slice();
+    copy.array[1] = true;
+    copy.cssSelector += `#${value}`;
+    return copy;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    if (this.array.indexOf(true) > 2) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    const copy = { ...this };
+    copy.array = this.array.slice();
+    copy.array[2] = true;
+    copy.cssSelector += `.${value}`;
+    return copy;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    if (this.array.indexOf(true) > 3) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    const copy = { ...this };
+    copy.array = this.array.slice();
+    copy.array[3] = true;
+    copy.cssSelector += `[${value}]`;
+    return copy;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    if (this.array.indexOf(true) > 4) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    const copy = { ...this };
+    copy.array = this.array.slice();
+    copy.array[4] = true;
+    copy.cssSelector += `:${value}`;
+    return copy;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    if (this.pe === 1) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    const copy = { ...this };
+    copy.pe = 1;
+    copy.array = this.array.slice();
+    copy.array[5] = true;
+    copy.cssSelector += `::${value}`;
+    return copy;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const copy = { ...this };
+    copy.cssSelector = `${selector1.cssSelector} ${combinator} ${selector2.cssSelector}`;
+    copy.array = this.array.slice();
+    return copy;
+  },
+
+  stringify() {
+    return this.cssSelector;
   },
 };
 
